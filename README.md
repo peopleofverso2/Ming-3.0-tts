@@ -137,6 +137,8 @@ docker build -f docker/Dockerfile -t ming-tts .
 
 The 0.5b environment has been tested on NVIDIA H800-80GB and H20-96G. For 0.5b, `flash-attn` is optional; inference falls back to PyTorch SDPA.
 
+On Apple Silicon, 0.5b runs on the `mps` device, which is picked automatically when CUDA is absent (or pass `--device mps`). The pinned `torch==2.6.0` works; a recent PyTorch is about 3× faster on MPS (real-time factor ≈0.8 against ≈2.7 on an M4 Max). Install `pynini` from conda-forge or pass `--no_text_normalization`. Tiny needs CUDA.
+
 Tiny uses a separate reference inference environment: Python **3.10.15**, PyTorch and torchaudio **2.7.1+cu118** (CUDA 11.8 wheels), and `transformers==4.46.3`. Install the pinned dependencies from [requirements-tiny.txt](requirements-tiny.txt) in a dedicated environment, as other dependency versions differ from 0.5b. We recommend using NVIDIA H800 for inference.
 
 ```bash

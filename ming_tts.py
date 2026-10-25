@@ -67,11 +67,22 @@ def trim_trailing_silence(
     return speech[..., :index * frame + frame + tail]
 
 
+def default_device():
+    """``cuda:0`` when CUDA is available, else Apple ``mps``, else ``cpu``."""
+    if torch.cuda.is_available():
+        return "cuda:0"
+    if torch.backends.mps.is_available():
+        return "mps"
+    return "cpu"
+
+
 class MingTTS:
-    def __init__(self, model_path, device="cuda:0", text_normalization=True,
+    def __init__(self, model_path, device=None, text_normalization=True,
                  cache_prompts=True):
         from transformers import AutoTokenizer
 
+        if device is None:
+            device = default_device()
         if os.path.isdir(model_path):
             local_path = model_path
         else:
@@ -361,4 +372,4 @@ class MingTTS:
         return waveform
 
 
-__all__ = ["MingTTS", "trim_trailing_silence"]
+__all__ = ["MingTTS", "default_device", "trim_trailing_silence"]
