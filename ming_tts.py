@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 
+import soundfile as sf
 import torch
 import torchaudio
 
@@ -74,6 +75,22 @@ def default_device():
     if torch.backends.mps.is_available():
         return "mps"
     return "cpu"
+
+
+def load_audio(path):
+    """Read audio as a float32 ``(channels, samples)`` tensor and its rate.
+
+    soundfile is called directly: torchaudio >= 2.9 ignores ``backend=`` and
+    routes ``load`` and ``save`` through the optional torchcodec package.
+    """
+    data, sample_rate = sf.read(path, dtype="float32", always_2d=True)
+    return torch.from_numpy(data.T.copy()), sample_rate
+
+
+def save_audio(path, waveform, sample_rate):
+    """Write a ``(channels, samples)`` waveform as 32-bit float WAV."""
+    sf.write(path, waveform.detach().cpu().float().numpy().T, sample_rate,
+             subtype="FLOAT")
 
 
 class MingTTS:
@@ -189,7 +206,7 @@ class MingTTS:
     def _load_prompt(self, paths):
         waveforms, spk_emb = [], []
         for path in paths:
-            waveform, sample_rate = torchaudio.load(path, backend="soundfile")
+            waveform, sample_rate = load_audio(path)
             if waveform.numel() == 0:
                 raise ValueError(f"prompt audio is empty: {path}")
             if waveform.shape[0] > 1:
@@ -368,7 +385,7 @@ class MingTTS:
         if output_path is not None:
             directory = os.path.dirname(os.path.abspath(output_path))
             os.makedirs(directory, exist_ok=True)
-            torchaudio.save(output_path, waveform, sample_rate=self.sample_rate)
+            save_audio(output_path, waveform, self.sample_rate)
         return waveform
 
 
