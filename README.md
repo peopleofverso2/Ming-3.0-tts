@@ -27,7 +27,7 @@ Within Pronunciation Robustness, Ming-3.0-tts also ranks **1st** on Expanding Sh
 
 ## Featured Abilities
 
-- **Voice creation:** clone a reference voice, design one from text, or choose from 100+ Chinese and five English built-in voices.
+- **Voice creation:** clone a reference voice, design one from text, or choose from built-in Chinese and English voices.
 - **Free-form control:** guide speech delivery with natural-language instructions.
 - **Paralinguistic control:** insert 14 inline tags for laughter, sighs, and other vocal expressions in Chinese or English.
 - **Languages and dialects:** synthesize Chinese, English, German, Spanish, French, Korean and Japanese, plus Sichuanese and Cantonese.
@@ -289,13 +289,13 @@ model.synthesize(
 )
 ```
 
-**Built-in Voices**: recommended **US_James**, **US_Stella**, **灵小柔** and **灵楷**. See the [full voice list](cookbooks/instruction_en.md#built-in-premium-voices).
+**Built-in Voices**: recommended **UK_George**, **US_Emma**, **灵小柔** and **灵楷**. See [Recommended voices](#built-in-voices) for more voices.
 
 ```python
 model.synthesize(
     task="IP",
     text="The garden will remain open until sunset, provided the weather stays clear.",
-    controls={"ip": "US_James"},
+    controls={"ip": "UK_George"},
     use_zero_spk_emb=True,
 )
 ```
@@ -394,12 +394,12 @@ model.synthesize(
 
 | Voice | Language | Character |
 | :--- | :--- | :--- |
-| US_James | English (US) | Male. Narration, explainers and documentary. |
-| US_Stella | English | — |
-| 灵小柔 | Chinese | Bright, sweet young female voice with clear diction. Assistants and customer service. |
-| 灵楷 | Chinese | Warm, resonant young male voice. Radio, documentary and audiobooks. |
+| `UK_George` | English (UK) | Male. Audiobooks and formal announcements. |
+| `US_Emma` | English (US) | Female. Voice assistants, narration and product dialogue. |
+| `灵小柔` | Chinese | Bright, sweet young female voice with clear diction. Assistants and customer service. |
+| `灵楷` | Chinese | Warm, resonant young male voice. Radio, documentary and audiobooks. |
 
-Over 100 Chinese voices and five English voices are available. See [the voice catalog](cookbooks/instruction_en.md#built-in-premium-voices) for the full list, including emotion-specific variants.
+See [the voice catalog](cookbooks/instruction_en.md#built-in-premium-voices) for the full list and voice descriptions.
 
 ## <a id="performance"></a>Performance
 

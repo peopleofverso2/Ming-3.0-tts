@@ -64,9 +64,9 @@ EMOTION_VALUES = ("高兴", "悲伤", "愤怒", "恐惧", "厌恶", "惊讶", "�
 
 DIALECT_VALUES = ("chuanyu dialect", "cantonese")
 
-# English premium built-in voices. Chinese IP voices are listed in
+# Recommended English built-in voices. Chinese IP voices are listed in
 # cookbooks/instructions.md.
-EN_IP_VOICES = ("US_Emma", "US_James", "UK_George", "UK_Charlotte")
+EN_IP_VOICES = ("US_Emma", "UK_George", "UK_Charlotte")
 
 _ZH_FIELDS = ("序号", "说话人", "方言", "风格", "语速", "基频", "音量", "情感")
 _EN_FIELDS = ("id", "speaker", "dialect", "style", "speed", "pitch", "volume", "emotion")
