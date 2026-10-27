@@ -267,6 +267,12 @@ class BailingMMNativeForConditionalGeneration(PreTrainedModel):
 
         return position_ids, mrope_position_deltas
 
+    def _autocast(self):
+        # bf16 autocast is what the CUDA runtime was validated with. Elsewhere
+        # (CPU, Apple MPS) the weights are already bf16, so run without it.
+        return torch.autocast(device_type=self.device.type, dtype=torch.bfloat16,
+                              enabled=self.device.type == "cuda")
+
     def prepare_inputs_for_generation(self):
         # An empty function to be compatible with the PEFT library for LoRA training. This function is not used in practice.
         pass
@@ -404,7 +410,7 @@ class BailingMMNativeForConditionalGeneration(PreTrainedModel):
         # Each inference step combines Autoregressive (AR) decoding with Flow Matching
         decode_budget = (MAX_CACHE_LEN - inputs_embeds.shape[1]) // self.patch_size
         for step in tqdm(range(min(max_decode_steps, decode_budget))):
-            with torch.autocast(device_type='cuda', dtype=torch.bfloat16):
+            with self._autocast():
                 outputs = self.model(
                     attention_mask=attention_mask,
                     position_ids=position_ids,
@@ -494,7 +500,7 @@ class BailingMMNativeForConditionalGeneration(PreTrainedModel):
         prompt_latent=None,
     ):
         sampled_tokens_list = []
-        with torch.autocast(device_type='cuda', dtype=torch.bfloat16):
+        with self._autocast():
             for sampled_tokens, _ in self.sample(
                     prompt=prompt,
                     text=text,
@@ -528,7 +534,7 @@ class BailingMMNativeForConditionalGeneration(PreTrainedModel):
         max_decode_steps=200,
     ):
         sampled_texts_list = []
-        with torch.autocast(device_type='cuda', dtype=torch.bfloat16):
+        with self._autocast():
             for sampled_tokens, last_chunk in self.sample_text(
                     prompt=prompt,
                     text=text,

@@ -27,7 +27,7 @@ Within Pronunciation Robustness, Ming-3.0-tts also ranks **1st** on Expanding Sh
 
 ## Featured Abilities
 
-- **Voice creation:** clone a reference voice, design one from text, or choose from 100+ Chinese and five English built-in voices.
+- **Voice creation:** clone a reference voice, design one from text, or choose from built-in Chinese and English voices.
 - **Free-form control:** guide speech delivery with natural-language instructions.
 - **Paralinguistic control:** insert 14 inline tags for laughter, sighs, and other vocal expressions in Chinese or English.
 - **Languages and dialects:** synthesize Chinese, English, German, Spanish, French, Korean and Japanese, plus Sichuanese and Cantonese.
@@ -136,6 +136,8 @@ docker build -f docker/Dockerfile -t ming-tts .
 ```
 
 The 0.5b environment has been tested on NVIDIA H800-80GB and H20-96G. For 0.5b, `flash-attn` is optional; inference falls back to PyTorch SDPA.
+
+On Apple Silicon, 0.5b runs on the `mps` device, which is picked automatically when CUDA is absent (or pass `--device mps`). The pinned `torch==2.6.0` works; a recent PyTorch is about 3× faster on MPS (real-time factor ≈0.8 against ≈2.7 on an M4 Max). Install `pynini` from conda-forge or pass `--no_text_normalization`. Tiny needs CUDA.
 
 Tiny uses a separate reference inference environment: Python **3.10.15**, PyTorch and torchaudio **2.7.1+cu118** (CUDA 11.8 wheels), and `transformers==4.46.3`. Install the pinned dependencies from [requirements-tiny.txt](requirements-tiny.txt) in a dedicated environment, as other dependency versions differ from 0.5b. We recommend using NVIDIA H800 for inference.
 
@@ -287,13 +289,13 @@ model.synthesize(
 )
 ```
 
-**Built-in Voices**: recommended **US_James**, **US_Stella**, **灵小柔** and **灵楷**. See the [full voice list](cookbooks/instruction_en.md#built-in-premium-voices).
+**Built-in Voices**: recommended **UK_George**, **US_Emma**, **灵小柔** and **灵楷**. See [Recommended voices](#built-in-voices) for more voices.
 
 ```python
 model.synthesize(
     task="IP",
     text="The garden will remain open until sunset, provided the weather stays clear.",
-    controls={"ip": "US_James"},
+    controls={"ip": "UK_George"},
     use_zero_spk_emb=True,
 )
 ```
@@ -392,12 +394,12 @@ model.synthesize(
 
 | Voice | Language | Character |
 | :--- | :--- | :--- |
-| US_James | English (US) | Male. Narration, explainers and documentary. |
-| US_Stella | English | — |
-| 灵小柔 | Chinese | Bright, sweet young female voice with clear diction. Assistants and customer service. |
-| 灵楷 | Chinese | Warm, resonant young male voice. Radio, documentary and audiobooks. |
+| `UK_George` | English (UK) | Male. Audiobooks and formal announcements. |
+| `US_Emma` | English (US) | Female. Voice assistants, narration and product dialogue. |
+| `灵小柔` | Chinese | Bright, sweet young female voice with clear diction. Assistants and customer service. |
+| `灵楷` | Chinese | Warm, resonant young male voice. Radio, documentary and audiobooks. |
 
-Over 100 Chinese voices and five English voices are available. See [the voice catalog](cookbooks/instruction_en.md#built-in-premium-voices) for the full list, including emotion-specific variants.
+See [the voice catalog](cookbooks/instruction_en.md#built-in-premium-voices) for the full list and voice descriptions.
 
 ## <a id="performance"></a>Performance
 

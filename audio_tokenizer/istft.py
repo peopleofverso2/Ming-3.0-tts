@@ -176,6 +176,8 @@ class ISTFTHead(FourierHead):
         # phase = torch.atan2(y, x)
         # S = mag * torch.exp(phase * 1j)
         # better directly produce the complex value
-        S = mag * (x + 1j * y)
+        # Build it in float32: torch <= 2.6 promotes bf16 * 1j to complex64 on its
+        # own, newer releases produce BComplex32, which most operators reject.
+        S = mag.float() * (x.float() + 1j * y.float())
         audio, audio_buffer, window_buffer = self.istft(S, audio_buffer=audio_buffer, window_buffer=window_buffer, streaming=streaming, last_chunk=last_chunk)
         return audio.unsqueeze(1),x_pred, audio_buffer, window_buffer
